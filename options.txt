@@ -1,0 +1,10 @@
+angle,aerial view,bird's eye view,close-up,crane shot,dutch angle,eye level shot,high angle shot,low angle shot,medium shot,over-the-shoulder shot,point of view shot,profile shot,reverse angle shot,tracking shot,two shot,wide shot,worm's eye view,zoom shot,tilt shot,pan shot
+lighting,backlighting,bounce lighting,broad lighting,christmas lighting,diffused lighting,fill lighting,hard lighting,high-key lighting,key lighting,low-key lighting,motivated lighting,natural lighting,practical lighting,rim lighting,silhouette lighting,soft lighting,split lighting,three-point lighting,top lighting,ambient lighting
+style,anime,art deco,caricature,cartoon,cyberpunk,expressionism,fantasy,futurism,gothic,impressionism,lineart,minimalism,pop art,realism,retro,steampunk,surrealism,vintage,abstract,modern
+theme,adventure,apocalyptic,city,cyberpunk,everyday life,fantasy,futuristic,historical,horror,magical,nature,post-apocalyptic,romance,science fiction,space,steampunk,supernatural,urban,western,mystery,thriller
+mainObject,animal,building,car,character,creature,everyday object,fantasy character,historical artifact,human,landscape,monster,plant,robot,scenery,spaceship,structure,vehicle,villain,hero,mythical creature
+color,black,blue,brown,cyan,gray,green,magenta,orange,pink,purple,red,teal,white,yellow,gold,silver,bronze,copper,ivory
+action,climbing,dancing,driving,fighting,flying,jumping,lying down,running,sitting,sleeping,standing,swimming,walking,crawling,jogging,leaping,rolling,spinning,twirling
+details,animals,architectural elements,background objects,clouds,futuristic elements,historical elements,landmarks,nature elements,reflections,shadows,textures,vegetation,weather effects,water features,mountains,rivers,forests,deserts,beaches
+mood,calm,dark,energetic,happy,inspirational,joyful,melancholic,mysterious,nostalgic,romantic,sad,serene,tense,excited,relaxed,playful,curious,determined,confident
+format,1:1,16:9,21:9,3:2,4:3,cinemascope,landscape,panoramic,portrait,square,letterbox,fullscreen,widescreen,ultrawide,vertical,horizontal,cinema,theater,display
