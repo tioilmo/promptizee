@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promptizee 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        label {
+            flex: 1;
+            margin-right: 10px;
+            text-align: right;
+            font-size: 14px;
+        }
+        select, input[type="text"] {
+            flex: 2;
+            padding: 8px;
+            box-sizing: border-box;
+            width: 100%;
+            height: 30px;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select:focus, input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        select.selected, input[type="text"].selected {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            text-align: left;
+            height: 150px;
+            overflow-y: auto;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Promptizee 2</h1>
+        <div class="subtitle">Improve Your Prompt!</div>
+        <form id="promptForm">
+            <div class="form-group">
+                <label for="simplePrompt">Simple Prompt:</label>
+                <input type="text" id="simplePrompt" name="simplePrompt" required>
+            </div>
+            <div class="form-group">
+                <label for="angle">Angle of View:</label>
+                <select id="angle" name="angle">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="lighting">Lighting Type:</label>
+                <select id="lighting" name="lighting">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="style">Style:</label>
+                <select id="style" name="style">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="theme">Theme or Scenario:</label>
+                <select id="theme" name="theme">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mainObject">Main Character or Object:</label>
+                <select id="mainObject" name="mainObject">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="color">Dominant Colors:</label>
+                <select id="color" name="color">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="action">Actions or Movements:</label>
+                <select id="action" name="action">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="details">Additional Details:</label>
+                <select id="details" name="details">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mood">Mood or Emotion:</label>
+                <select id="mood" name="mood">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="format">Image Format:</label>
+                <select id="format" name="format">
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <button type="button" onclick="generatePrompt()">Generate Optimized Prompt</button>
+            <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button>
+        </form>
+        <div class="output" id="output"></div>
+    </div>
+
+    <script>
+        async function loadOptions() {
+            const response = await fetch('options.txt');
+            const text = await response.text();
+            const options = {};
+            text.split('\n').forEach(line => {
+                if (line.trim()) {
+                    const [category, ...opts] = line.split(',');
+                    options[category] = opts;
+                }
+            });
+            return options;
+        }
+
+        async function populateDropdowns() {
+            const options = await loadOptions();
+            Object.keys(options).forEach(category => {
+                const selectElement = document.getElementById(category);
+                if (selectElement) {
+                    options[category].forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option.trim();
+                        optionElement.textContent = option.trim();
+                        selectElement.appendChild(optionElement);
+                    });
+                }
+            });
+        }
+
+        async function loadPhrases() {
+            const response = await fetch('phrases.txt');
+            const text = await response.text();
+            const phrases = {};
+            text.split('\n').forEach(line => {
+                if (line.trim()) {
+                    const [category, phrase] = line.split(',');
+                    if (!phrases[category]) {
+                        phrases[category] = [];
+                    }
+                    phrases[category].push(phrase);
+                }
+            });
+            return phrases;
+        }
+
+        function getRandomPhrase(phrases) {
+            return phrases[Math.floor(Math.random() * phrases.length)];
+        }
+
+        async function generatePrompt() {
+            const phrases = await loadPhrases();
+            const simplePrompt = document.getElementById('simplePrompt').value;
+            const angle = document.getElementById('angle').value;
+            const lighting = document.getElementById('lighting').value;
+            const style = document.getElementById('style').value;
+            const theme = document.getElementById('theme').value;
+            const mainObject = document.getElementById('mainObject').value;
+            const color = document.getElementById('color').value;
+            const action = document.getElementById('action').value;
+            const details = document.getElementById('details').value;
+            const mood = document.getElementById('mood').value;
+            const format = document.getElementById('format').value;
+
+            let optimizedPrompt = simplePrompt;
+
+            if (action !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['action']).replace('{action}', action);
+            }
+            if (theme !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['theme']).replace('{theme}', theme);
+            }
+            if (angle !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['angle']).replace('{angle}', angle);
+            }
+            if (lighting !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['lighting']).replace('{lighting}', lighting);
+            }
+            if (style !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['style']).replace('{style}', style);
+            }
+            if (color !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['color']).replace('{color}', color);
+            }
+            if (details !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['details']).replace('{details}', details);
+            }
+            if (mood !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['mood']).replace('{mood}', mood);
+            }
+            if (format !== "None") {
+                optimizedPrompt += " " + getRandomPhrase(phrases['format']).replace('{format}', format);
+            }
+
+            document.getElementById('output').innerText = optimizedPrompt;
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output').innerText;
+            navigator.clipboard.writeText(output).then(() => {
+                alert('Prompt copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Populate dropdowns when the page loads
+        window.onload = populateDropdowns;
+
+        // Add event listeners to select elements
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                if (this.value !== "None") {
+                    this.classList.add('selected');
+                } else {
+                    this.classList.remove('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
